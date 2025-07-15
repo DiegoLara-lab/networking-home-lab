@@ -15,6 +15,8 @@ Experiment with protocols, VLANs, ACLs, and more
 Lab Setup
 Hardware:
 
+1x Cisco 1811
+
 2× Cisco 1841 Routers
 
 2× Cisco Catalyst 2960 Switches
