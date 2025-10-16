@@ -5,7 +5,7 @@ Oct 10 2025
 Basic Configurations
 
 
-router>en
+Router>en
 Router#conf t
 Router(config)#hostname R2
 R2(config)#int fa0/0
