@@ -9,17 +9,16 @@ router>en
 Router#conf t
 Router(config)#hostname R2
 R2(config)#int fa0/0
-R2(config-if)# ip address 10.0.0.6 255.255.255.252
+R2(config-if)#ip address 10.0.0.6 255.255.255.252
+R2(config-if)#no shut
+R2(config-if)#exit
+R2(config)#int fa0/1
+R2(config-if)#ip address 192.168.10.1 255.255.255.128
+R2(config-if)#no shut
+R2(config-if)#end
+R2>wr
+[OK]
 
-chanegd interafce to fa0/1
-R2(config-if)# ip address 192.168.10.1 255.255.255.128
 
 
 
-
-Oct 12 2025
-(might get deleted)
-R2#conf t
-R2(config)#ip dhcp pool POOL-1
-R2(dhcp-config)#network 10.0.0.0 255.255.255.252
-R2(dhcp-config)#main-route 10.0.0.1 
