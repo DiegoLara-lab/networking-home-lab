@@ -1,1 +1,4 @@
--
+Router>en
+Router#conf t
+Router(config)#hostname R3
+R3(config)#
