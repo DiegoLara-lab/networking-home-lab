@@ -6,16 +6,24 @@ Router>en
 Router#conf t
 Router(config)#hostname R1
 R1(config)#int fa0/0
-R1(config-if)# ip address 10.0.0.1 255.255.255.252
-R1(config-if)# ip address 10.0.0.5 255.255.255.252
+R1(config-if)#ip address 10.0.0.1 255.255.255.252
+R1(config-if)#no shut
+R1(config-if)#exit
+R1(config-if)#int fa0/1
+R1(config-if)#ip address 10.0.0.5 255.255.255.252
+R1(config-if)#no shut
+R1(config-if)#end
+R1#wr
+[OK]
 
-(all things were saved) 
+
 ---------------------------------------------------------
 
 Oct 12 2025
 
 DHCP Configuration 
 Oct 12 2025
+
 R1#conf t
 R1(config)ip dhcp excluded-addresses 192.168.10.1 
 R1(config)ip dhcp excluded-addresses 192.168.64.1
@@ -25,6 +33,8 @@ R1(dhcp-config)#main-route 192.168.10.1
 R1(dhcp-config)#exit 
 R1(config)#ip dhcp pool BRANCH-2
 R1(dhcp-config)#network 192.168.64.0 255.255.255.128
-
-
+R1(dhcp-config)#default-route 192.168.64.1
+R1(dhcp-config)#end
+R1#wr
+[OK]
 
