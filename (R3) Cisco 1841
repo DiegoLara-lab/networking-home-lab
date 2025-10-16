@@ -1,4 +1,20 @@
+Oct 10 2025
+Basic Configuration 
+
 Router>en
 Router#conf t
 Router(config)#hostname R3
-R3(config)#
+R3(config)#int fa0/0
+R3(config-if)#ip address 10.0.0.6 255.255.255.252
+R3(config-if)#no shut
+R3(config-if)#exit
+R3(config)#int fa0/1
+R3(config-if)#ip address 192.168.64.1 255.255.255.128
+R3(config-if)#no shut
+R3(config-if)#exit 
+
+------------------------------------------------------------
+
+- After doing the Ip helper commmand with the Dhcp server i got an APIPA 
+
+- might fix later 
