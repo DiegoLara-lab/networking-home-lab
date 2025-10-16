@@ -1,0 +1,32 @@
+Oct 10 2025
+
+Basic Configuration
+
+Router>en
+Router#conf t
+Router(config)#hostname R1
+R1(config)#int fa0/0
+R1(config-if)# ip address 10.0.0.1 255.255.255.252
+
+ Changed interface to Fa0/1
+R1(config-if)# ip address 10.0.0.5 255.255.255.252
+
+(all things were saved) 
+---------------------------------------------------------
+
+Oct 12 2025
+
+DHCP Configuration 
+Oct 12 2025
+R1#conf t
+R1(config)ip dhcp excluded-addresses 192.168.10.1 
+R1(config)ip dhcp excluded-addresses 192.168.64.1
+R1(config)#ip dhcp pool BRANCH-1
+R1(dhcp-config)#network 192.168.10.0 255.255.255.128
+R1(dhcp-config)#main-route 192.168.10.1 
+R1(dhcp-config)#exit 
+R1(config)#ip dhcp pool BRANCH-2
+R1(dhcp-config)#network 192.168.64.0 255.255.255.128
+
+
+
