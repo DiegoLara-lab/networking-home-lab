@@ -1,1 +1,54 @@
+Nov 11 
+--------------------------------------------------------------------
+Switch>en
+Switch#conf t
+Enter configuration commands, one per line.  End with CNTL/Z.
+Switch(config)#hostname S1
+S1(config)#vlan 10
+S1(config-vlan)#name OFFICE1
+S1(config-vlan)#exit
+S1(config)#int fa0/1
+S1(config-if)#switchport mode ac
+S1(config-if)#switchport mode access 
+S1(config-if)#swi
+S1(config-if)#switchport acces
+S1(config-if)#switchport access vlan 10
+S1(config-if)#exit
+S1(config)#swi
+S1(config)#int g0/1
+S1(config-if)#sw
+S1(config-if)#switchport mode trunk
 
+S1(config-if)#
+%LINEPROTO-5-UPDOWN: Line protocol on Interface GigabitEthernet0/1, changed state to down
+
+%LINEPROTO-5-UPDOWN: Line protocol on Interface GigabitEthernet0/1, changed state to up
+
+S1(config-if)#sw
+S1(config-if)#switchport acc
+S1(config-if)#switchport access mode
+S1(config-if)#switchport mode access 
+S1(config-if)#sw
+S1(config-if)#switchport access vlan 10
+S1(config)#int g0/1
+S1(config-if)#sw
+S1(config-if)#switchport mode trun
+S1(config-if)#
+%LINEPROTO-5-UPDOWN: Line protocol on Interface GigabitEthernet0/1, changed state to down
+
+%LINEPROTO-5-UPDOWN: Line protocol on Interface GigabitEthernet0/1, changed state to up
+
+S1(config-if)#switchport ac
+S1(config-if)#switchport access ?
+  vlan  Set VLAN when interface is in access mode
+S1(config-if)#switchport access vlan 10
+S1(config-if)#exit
+S1(config)#exit
+S1#wr
+
+--------------------------
+- What I did :
+   - Created Vlan 10 named OFFICE1
+   - Assigned ports fa0/1 to vlan 10 
+   - Port G0/1 became a trunk link
+   - only vlan 10 can access trunk link 
