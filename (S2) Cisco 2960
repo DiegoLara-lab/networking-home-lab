@@ -1,1 +1,36 @@
+Nov 11 
+-------------------------------------
 
+Switch>
+Switch>en
+Switch#conf t
+Enter configuration commands, one per line.  End with CNTL/Z.
+Switch(config)#hostname S2
+S2(config)#vlan 20
+S2(config-vlan)#name OFFICE2
+S2(config-vlan)#exit
+S2(config)#int fa0/1
+S2(config-if)#switchport mode access 
+S2(config-if)#switchport access vlan 20
+S2(config-if)#exit
+S2(config)#int g0/1
+S2(config-if)#sw
+S2(config-if)#switchport mode trunk
+
+S2(config-if)#
+%LINEPROTO-5-UPDOWN: Line protocol on Interface GigabitEthernet0/1, changed state to down
+
+%LINEPROTO-5-UPDOWN: Line protocol on Interface GigabitEthernet0/1, changed state to up
+
+S2(config-if)#sw
+S2(config-if)#switchport acc
+S2(config-if)#switchport access vlan 20
+S2(config-if)#exit
+S2(config)#exit
+S2#Wr
+
+Configurations Summarized:
+  - Created Vlan 20 named OFFICE2
+  - Assigned port fa0/1 to vlan 20
+  - Port g0/1 became a trunk link
+  - only vlan 20 can access trunk link
