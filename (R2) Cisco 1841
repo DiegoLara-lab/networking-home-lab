@@ -1,24 +1,49 @@
+Nov 11 
+----------------------
 
-
-Oct 10 2025
-
-Basic Configurations
-
-
+Router>
 Router>en
 Router#conf t
+Enter configuration commands, one per line.  End with CNTL/Z.
 Router(config)#hostname R2
+R2(config)#
+R2(config)#
 R2(config)#int fa0/0
-R2(config-if)#ip address 10.0.0.6 255.255.255.252
+R2(config-if)#ip address 10.0.0.2 255.255.255.252
 R2(config-if)#no shut
-R2(config-if)#exit
+
+R2(config-if)#
+%LINK-5-CHANGED: Interface FastEthernet0/0, changed state to up
+
+%LINEPROTO-5-UPDOWN: Line protocol on Interface FastEthernet0/0, changed state to up
+exit
 R2(config)#int fa0/1
-R2(config-if)#ip address 192.168.10.1 255.255.255.128
+R2(config-if)#ip add
 R2(config-if)#no shut
-R2(config-if)#end
-R2>wr
-[OK]
 
+R2(config-if)#
+%LINK-5-CHANGED: Interface FastEthernet0/1, changed state to up
 
+%LINEPROTO-5-UPDOWN: Line protocol on Interface FastEthernet0/1, changed state to up
 
+R2(config-if)#
+R2(config-if)#exit
+R2(config)#int fa0/1.10
+R2(config-subif)#
+%LINK-3-UPDOWN: Interface FastEthernet0/1.10, changed state to down
+
+%LINEPROTO-5-UPDOWN: Line protocol on Interface FastEthernet0/1.10, changed state to up
+
+R2(config-subif)#
+R2(config-subif)#enc
+R2(config-subif)#encapsulation 
+R2(config-subif)#encapsulation dot1Q 10
+R2(config-subif)#ip address 192.168.10.1 255.255.255.192
+R2(config-subif)#exit
+R2(config)#
+
+Configurations Summary:
+  -Assigned IP addresses to interfaces 
+        -Fa0/0 : 10.0.0.2 2555.255.255.252
+        -Fa0/1.10 : 192.168.10.1 255.255.255.192
 
