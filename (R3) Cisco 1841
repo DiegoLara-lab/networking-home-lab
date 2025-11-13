@@ -45,4 +45,6 @@ R3(config)#exit
 R3#wr
 
 Configurations Summary:
-
+  -Assigned IP addresses
+    -Fa0/0: 10.0.0.6 255.255.255.252
+    -Fa0/1.10 192.168.10.65 255.255.255.192
