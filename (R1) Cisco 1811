@@ -1,40 +1,128 @@
-Oct 10 2025
+# Cisco Router Configuration Lab
 
-Basic Configuration
+**Project:** Basic Router Setup and DHCP Configuration  
+**Device:** Cisco Router (R1)  
+**Technologies:** Cisco IOS, IPv4, DHCP, Subnetting  
+**Last Updated:** October 12, 2026
 
-Router>en
-Router#conf t
-Router(config)#hostname R1
-R1(config)#int fa0/0
-R1(config-if)#ip address 10.0.0.1 255.255.255.252
-R1(config-if)#no shut
-R1(config-if)#exit
-R1(config-if)#int fa0/1
-R1(config-if)#ip address 10.0.0.5 255.255.255.252
-R1(config-if)#no shut
-R1(config-if)#end
-R1#wr
-[OK]
+## Overview
 
+This lab documents the initial configuration of a Cisco router and the implementation of DHCP pools for two branch networks. The goal is to establish router interface addressing and automate IP address assignment for client devices.
 
----------------------------------------------------------
+## 1. Basic Router Configuration
 
-Oct 12 2025
+**Date:** October 10, 2026
 
-DHCP Configuration 
-Oct 12 2025
+### Objectives
+- Configure the router hostname.
+- Assign IPv4 addresses to router interfaces.
+- Enable interfaces.
+- Save the running configuration.
 
-R1#conf t
-R1(config)ip dhcp excluded-addresses 192.168.10.1 
-R1(config)ip dhcp excluded-addresses 192.168.64.1
-R1(config)#ip dhcp pool BRANCH-1
-R1(dhcp-config)#network 192.168.10.0 255.255.255.128
-R1(dhcp-config)#main-route 192.168.10.1 
-R1(dhcp-config)#exit 
-R1(config)#ip dhcp pool BRANCH-2
-R1(dhcp-config)#network 192.168.64.0 255.255.255.128
-R1(dhcp-config)#default-route 192.168.64.1
-R1(dhcp-config)#end
-R1#wr
-[OK]
+### Configuration
 
+```cisco
+Router> enable
+Router# configure terminal
+Router(config)# hostname R1
+
+R1(config)# interface FastEthernet0/0
+R1(config-if)# ip address 10.0.0.1 255.255.255.252
+R1(config-if)# no shutdown
+R1(config-if)# exit
+
+R1(config)# interface FastEthernet0/1
+R1(config-if)# ip address 10.0.0.5 255.255.255.252
+R1(config-if)# no shutdown
+R1(config-if)# end
+
+R1# copy running-config startup-config
+```
+
+### IP Addressing Table
+
+| Interface | IP Address | Subnet Mask |
+|---|---|---|
+| FastEthernet0/0 | 10.0.0.1 | 255.255.255.252 |
+| FastEthernet0/1 | 10.0.0.5 | 255.255.255.252 |
+
+Both interfaces use a `/30` subnet mask, providing two usable host addresses per subnet.
+
+## 2. DHCP Configuration
+
+**Date:** October 12, 2026
+
+### Objectives
+- Reserve gateway addresses so DHCP does not assign them to clients.
+- Create separate DHCP pools for two branch networks.
+- Configure the network and default gateway for each pool.
+- Save the configuration.
+
+### Configuration
+
+```cisco
+R1# configure terminal
+
+! Exclude the gateway addresses
+R1(config)# ip dhcp excluded-address 192.168.10.1
+R1(config)# ip dhcp excluded-address 192.168.64.1
+
+! DHCP pool for Branch 1
+R1(config)# ip dhcp pool BRANCH-1
+R1(dhcp-config)# network 192.168.10.0 255.255.255.128
+R1(dhcp-config)# default-router 192.168.10.1
+R1(dhcp-config)# exit
+
+! DHCP pool for Branch 2
+R1(config)# ip dhcp pool BRANCH-2
+R1(dhcp-config)# network 192.168.64.0 255.255.255.128
+R1(dhcp-config)# default-router 192.168.64.1
+R1(dhcp-config)# exit
+
+R1(config)# end
+R1# copy running-config startup-config
+```
+
+### DHCP Addressing Plan
+
+| Branch | Network | Subnet Mask | Default Gateway |
+|---|---|---|---|
+| Branch 1 | 192.168.10.0/25 | 255.255.255.128 | 192.168.10.1 |
+| Branch 2 | 192.168.64.0/25 | 255.255.255.128 | 192.168.64.1 |
+
+Each `/25` subnet contains 128 total addresses, with 126 usable host addresses before accounting for excluded addresses and other reservations.
+
+## 3. Verification and Testing
+
+After configuring the router, use the following commands to check the configuration.
+
+```cisco
+show ip interface brief
+show running-config
+show ip dhcp pool
+show ip dhcp binding
+show ip dhcp conflict
+```
+
+### Expected Results
+- Router interfaces should show the correct IP addresses and an `up/up` status when the connected links are active.
+- Both DHCP pools should appear in the DHCP pool output.
+- Client devices should receive addresses from the correct subnet when connected to the appropriate network.
+- Clients should receive the configured default gateway.
+
+## 4. Lessons Learned
+
+- Configuring router interfaces with IPv4 addresses and subnet masks.
+- Using `/30` subnets for point-to-point network links.
+- Creating `/25` networks for branch LANs.
+- Configuring DHCP pools to automate client addressing.
+- Excluding reserved IP addresses and assigning default gateways.
+- Verifying router and DHCP configurations using Cisco IOS commands.
+
+## 5. Future Improvements
+
+- Configure VLANs for network segmentation.
+- Implement OSPF for routing between networks.
+- Configure access control lists (ACLs) to restrict traffic.
+- Add DHCP testing with client devices or virtual machines.
+- Document the topology and test inter-network connectivity.
