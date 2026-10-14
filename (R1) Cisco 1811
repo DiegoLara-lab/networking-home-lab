@@ -1,21 +1,20 @@
-# Cisco Router Configuration Lab
+# Cisco Networking Lab: Router Configuration and DHCP
 
-**Project:** Basic Router Setup and DHCP Configuration  
-**Device:** Cisco Router (R1)  
+**Device:** Cisco Router R1  
 **Technologies:** Cisco IOS, IPv4, DHCP, Subnetting  
-**Last Updated:** October 12, 2026
+**Dates:** October 10, 2025 – October 12, 2026
 
 ## Overview
 
-This lab documents the initial configuration of a Cisco router and the implementation of DHCP pools for two branch networks. The goal is to establish router interface addressing and automate IP address assignment for client devices.
+This project documents my hands-on Cisco networking lab, covering basic router configuration and Dynamic Host Configuration Protocol (DHCP). I configured router interfaces with IPv4 addresses and created DHCP pools to automate IP address assignment for two branch networks.
 
 ## 1. Basic Router Configuration
 
-**Date:** October 10, 2026
+**Date:** October 10, 2025
 
 ### Objectives
 - Configure the router hostname.
-- Assign IPv4 addresses to router interfaces.
+- Assign IPv4 addresses to interfaces.
 - Enable interfaces.
 - Save the running configuration.
 
@@ -41,39 +40,39 @@ R1# copy running-config startup-config
 
 ### IP Addressing Table
 
-| Interface | IP Address | Subnet Mask |
-|---|---|---|
-| FastEthernet0/0 | 10.0.0.1 | 255.255.255.252 |
-| FastEthernet0/1 | 10.0.0.5 | 255.255.255.252 |
+| Interface | IP Address | Subnet Mask | CIDR |
+|---|---|---|---|
+| FastEthernet0/0 | 10.0.0.1 | 255.255.255.252 | /30 |
+| FastEthernet0/1 | 10.0.0.5 | 255.255.255.252 | /30 |
 
-Both interfaces use a `/30` subnet mask, providing two usable host addresses per subnet.
+Both interfaces use `/30` subnets, commonly used for point-to-point links.
 
 ## 2. DHCP Configuration
 
 **Date:** October 12, 2026
 
 ### Objectives
-- Reserve gateway addresses so DHCP does not assign them to clients.
-- Create separate DHCP pools for two branch networks.
-- Configure the network and default gateway for each pool.
-- Save the configuration.
+- Configure DHCP pools for two branch networks.
+- Exclude reserved gateway addresses from DHCP assignment.
+- Define network addresses and default gateways.
+- Automate IP address assignment for clients.
 
 ### Configuration
 
 ```cisco
 R1# configure terminal
 
-! Exclude the gateway addresses
+! Exclude reserved gateway addresses
 R1(config)# ip dhcp excluded-address 192.168.10.1
 R1(config)# ip dhcp excluded-address 192.168.64.1
 
-! DHCP pool for Branch 1
+! Configure DHCP for Branch 1
 R1(config)# ip dhcp pool BRANCH-1
 R1(dhcp-config)# network 192.168.10.0 255.255.255.128
 R1(dhcp-config)# default-router 192.168.10.1
 R1(dhcp-config)# exit
 
-! DHCP pool for Branch 2
+! Configure DHCP for Branch 2
 R1(config)# ip dhcp pool BRANCH-2
 R1(dhcp-config)# network 192.168.64.0 255.255.255.128
 R1(dhcp-config)# default-router 192.168.64.1
@@ -83,18 +82,18 @@ R1(config)# end
 R1# copy running-config startup-config
 ```
 
-### DHCP Addressing Plan
+### DHCP Addressing Table
 
-| Branch | Network | Subnet Mask | Default Gateway |
+| Branch | Network Address | Subnet Mask | Default Gateway |
 |---|---|---|---|
 | Branch 1 | 192.168.10.0/25 | 255.255.255.128 | 192.168.10.1 |
 | Branch 2 | 192.168.64.0/25 | 255.255.255.128 | 192.168.64.1 |
 
-Each `/25` subnet contains 128 total addresses, with 126 usable host addresses before accounting for excluded addresses and other reservations.
+Each `/25` subnet contains 128 total IP addresses, including 126 usable host addresses before exclusions and other reservations.
 
-## 3. Verification and Testing
+## 3. Verification
 
-After configuring the router, use the following commands to check the configuration.
+The following Cisco IOS commands can be used to verify interface status and DHCP configuration.
 
 ```cisco
 show ip interface brief
@@ -104,25 +103,38 @@ show ip dhcp binding
 show ip dhcp conflict
 ```
 
-### Expected Results
-- Router interfaces should show the correct IP addresses and an `up/up` status when the connected links are active.
-- Both DHCP pools should appear in the DHCP pool output.
-- Client devices should receive addresses from the correct subnet when connected to the appropriate network.
-- Clients should receive the configured default gateway.
+### Verification Checklist
 
-## 4. Lessons Learned
+- [ ] Confirm router interfaces have the correct IP addresses.
+- [ ] Verify interface status is `up/up` when links are connected and operational.
+- [ ] Confirm both DHCP pools are configured.
+- [ ] Connect a client to each branch network.
+- [ ] Verify clients receive an IP address from the correct subnet.
+- [ ] Confirm clients receive the correct default gateway.
+- [ ] Save the final configuration.
 
-- Configuring router interfaces with IPv4 addresses and subnet masks.
-- Using `/30` subnets for point-to-point network links.
-- Creating `/25` networks for branch LANs.
-- Configuring DHCP pools to automate client addressing.
-- Excluding reserved IP addresses and assigning default gateways.
-- Verifying router and DHCP configurations using Cisco IOS commands.
+*Note: These are verification steps, not claims that every test has already passed.*
+
+## 4. Key Concepts Practiced
+
+- Cisco IOS command-line configuration
+- Router hostname and interface configuration
+- IPv4 addressing and subnetting
+- `/30` point-to-point subnets
+- `/25` LAN subnets
+- DHCP pool creation and address exclusions
+- Default gateway assignment
+- Configuration verification and persistence
 
 ## 5. Future Improvements
 
-- Configure VLANs for network segmentation.
-- Implement OSPF for routing between networks.
-- Configure access control lists (ACLs) to restrict traffic.
-- Add DHCP testing with client devices or virtual machines.
-- Document the topology and test inter-network connectivity.
+- Implement VLANs for network segmentation.
+- Configure OSPF for routing between networks.
+- Implement ACLs to control traffic between branches.
+- Test DHCP using physical devices or virtual machines.
+- Add a network topology diagram.
+- Document connectivity tests and troubleshooting results.
+
+## Notes
+
+The DHCP pools specify gateways at `192.168.10.1` and `192.168.64.1`. These gateway addresses must be configured on the router or appropriate Layer 3 devices serving the branch networks. The existing `FastEthernet0/0` and `FastEthernet0/1` interfaces use `10.0.0.1` and `10.0.0.5`, respectively, so additional LAN-facing interfaces or devices may be required for the DHCP setup to work as intended.
