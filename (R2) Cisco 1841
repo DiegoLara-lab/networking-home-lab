@@ -1,119 +1,27 @@
-# Cisco Networking Lab: Router R2 and VLAN 10 Configuration
+# Cisco Networking Lab: Router R2 and VLAN 10
 
 **Date:** October 12, 2026  
-** Device: ** Cisco Router R2  
-**Technologies:** Cisco IOS, IPv4, VLANs, 802.1Q, Router-on-a-Stick
+**Device:** Cisco Router R2  
+**Technologies:** Cisco IOS, IPv4, VLANs, IEEE 802.1Q
 
 ## Overview
 
-This lab documents the configuration of Cisco Router R2, including interface addressing and a subinterface for VLAN 10. The goal is to establish connectivity between routers and configure inter-VLAN routing using 802.1Q encapsulation.
+This lab documents the configuration of Cisco Router R2, including interface addressing and VLAN 10 subinterface configuration. The goal is to establish router connectivity and configure a default gateway for VLAN 10.
 
 ## 1. Basic Router Configuration
 
-### Objectives
-- Set the router hostname to R2.
-- Configure the FastEthernet0/0 interface.
-- Enable the physical interfaces.
-- Prepare FastEthernet0/1 for VLAN subinterfaces.
-
 ### Configuration
 
 ```cisco
-Router> enable
-Router# configure terminal
-Router(config)# hostname R2
+enable
+configure terminal
+hostname R2
 
-R2(config)# interface FastEthernet0/0
-R2(config-if)# ip address 10.0.0.2 255.255.255.252
-R2(config-if)# no shutdown
-R2(config-if)# exit
+interface FastEthernet0/0
+ ip address 10.0.0.2 255.255.255.252
+ no shutdown
+ exit
 
-R2(config)# interface FastEthernet0/1
-R2(config-if)# no shutdown
-R2(config-if)# exit
-```
-
-## 2. VLAN 10 Subinterface Configuration
-
-### Objectives
-- Create a subinterface on FastEthernet0/1.
-- Configure 802.1Q encapsulation for VLAN 10.
-- Assign the VLAN 10 gateway IP address.
-
-### Configuration
-
-```cisco
-R2(config)# interface FastEthernet0/1.10
-R2(config-subif)# encapsulation dot1Q 10
-R2(config-subif)# ip address 192.168.10.1 255.255.255.192
-R2(config-subif)# no shutdown
-R2(config-subif)# exit
-
-R2(config)# end
-R2# copy running-config startup-config
-```
-
-## 3. IP Addressing Table
-
-| Interface | IP Address | Subnet Mask | Purpose |
-|---|---|---|---|
-| FastEthernet0/0 | 10.0.0.2 | 255.255.255.252 | Router-to-router link |
-| FastEthernet0/1 | No IP assigned | — | Physical trunk interface |
-| FastEthernet0/1.10 | 192.168.10.1 | 255.255.255.192 | VLAN 10 default gateway |
-
-## 4. VLAN 10 Network Details
-
-| Setting | Value |
-|---|---|
-| VLAN ID | 10 |
-| Network address | 192.168.10.0/26 |
-| Default gateway | 192.168.10.1 |
-| Usable host range | 192.168.10.1–192.168.10.62 |
-| Broadcast address | 192.168.10.63 |
-| Encapsulation | IEEE 802.1Q |
-
-## 5. Verification
-
-Use the following commands to verify the router configuration.
-
-```cisco
-show ip interface brief
-show running-config
-show interfaces FastEthernet0/1.10
-show ip route
-```
-
-### Verification Checklist
-
-- [ ] Verify FastEthernet0/0 has the correct IP address.
-- [ ] Confirm FastEthernet0/1 is enabled.
-- [ ] Confirm FastEthernet0/1.10 uses VLAN 10 encapsulation.
-- [ ] Verify the VLAN 10 gateway address is configured.
-- [ ] Test connectivity between a VLAN 10 client and its default gateway.
-- [ ] Save the running configuration.
-
-## 6. Key Concepts Practiced
-
-- Cisco IOS router configuration
-- IPv4 addressing and subnetting
-- Router-to-router connectivity
-- VLAN subinterfaces
-- IEEE 802.1Q encapsulation
-- Router-on-a-Stick configuration
-- Default gateway setup
-- Configuration verification
-
-## 7. Important Notes
-
-- FastEthernet0/1 must connect to a switch port configured as an 802.1Q trunk that carries VLAN 10.
-- The VLAN must exist on the connected switch, and the client-facing switch ports must be assigned to VLAN 10.
-- FastEthernet0/1 does not need an IP address for this router-on-a-stick configuration because the IP address is assigned to the subinterface.
-- The router-to-router link uses the `10.0.0.0/30` network. The other endpoint should use `10.0.0.1/30`.
-
-## 8. Future Improvements
-
-- Configure additional VLAN subinterfaces.
-- Implement DHCP for VLAN clients.
-- Configure OSPF between routers.
-- Apply ACLs to control traffic between VLANs.
-- Document connectivity tests with command output and screenshots.
+interface FastEthernet0/1
+ no shutdown
+ exit
