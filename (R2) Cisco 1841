@@ -8,6 +8,7 @@
 
 This lab documents the configuration of Cisco Router R2, including interface addressing and VLAN 10 subinterface configuration. The goal is to establish router connectivity and configure a default gateway for VLAN 10.
 
+
 ## 1. Basic Router Configuration
 
 ### Configuration
