@@ -1,49 +1,119 @@
-Nov 11 
-----------------------
+# Cisco Networking Lab: Router R2 and VLAN 10 Configuration
 
-Router>
-Router>en
-Router#conf t
-Enter configuration commands, one per line.  End with CNTL/Z.
-Router(config)#hostname R2
-R2(config)#
-R2(config)#
-R2(config)#int fa0/0
-R2(config-if)#ip address 10.0.0.2 255.255.255.252
-R2(config-if)#no shut
+**Date:** October 12, 2026  
+**Device:** Cisco Router R2  
+**Technologies:** Cisco IOS, IPv4, VLANs, 802.1Q, Router-on-a-Stick
 
-R2(config-if)#
-%LINK-5-CHANGED: Interface FastEthernet0/0, changed state to up
+## Overview
 
-%LINEPROTO-5-UPDOWN: Line protocol on Interface FastEthernet0/0, changed state to up
-exit
-R2(config)#int fa0/1
-R2(config-if)#ip add
-R2(config-if)#no shut
+This lab documents the configuration of Cisco Router R2, including interface addressing and a subinterface for VLAN 10. The goal is to establish connectivity between routers and configure inter-VLAN routing using 802.1Q encapsulation.
 
-R2(config-if)#
-%LINK-5-CHANGED: Interface FastEthernet0/1, changed state to up
+## 1. Basic Router Configuration
 
-%LINEPROTO-5-UPDOWN: Line protocol on Interface FastEthernet0/1, changed state to up
+### Objectives
+- Set the router hostname to R2.
+- Configure the FastEthernet0/0 interface.
+- Enable the physical interfaces.
+- Prepare FastEthernet0/1 for VLAN subinterfaces.
 
-R2(config-if)#
-R2(config-if)#exit
-R2(config)#int fa0/1.10
-R2(config-subif)#
-%LINK-3-UPDOWN: Interface FastEthernet0/1.10, changed state to down
+### Configuration
 
-%LINEPROTO-5-UPDOWN: Line protocol on Interface FastEthernet0/1.10, changed state to up
+```cisco
+Router> enable
+Router# configure terminal
+Router(config)# hostname R2
 
-R2(config-subif)#
-R2(config-subif)#enc
-R2(config-subif)#encapsulation 
-R2(config-subif)#encapsulation dot1Q 10
-R2(config-subif)#ip address 192.168.10.1 255.255.255.192
-R2(config-subif)#exit
-R2(config)#
+R2(config)# interface FastEthernet0/0
+R2(config-if)# ip address 10.0.0.2 255.255.255.252
+R2(config-if)# no shutdown
+R2(config-if)# exit
 
-Configurations Summary:
-  -Assigned IP addresses to interfaces 
-        -Fa0/0 : 10.0.0.2 2555.255.255.252
-        -Fa0/1.10 : 192.168.10.1 255.255.255.192
+R2(config)# interface FastEthernet0/1
+R2(config-if)# no shutdown
+R2(config-if)# exit
+```
 
+## 2. VLAN 10 Subinterface Configuration
+
+### Objectives
+- Create a subinterface on FastEthernet0/1.
+- Configure 802.1Q encapsulation for VLAN 10.
+- Assign the VLAN 10 gateway IP address.
+
+### Configuration
+
+```cisco
+R2(config)# interface FastEthernet0/1.10
+R2(config-subif)# encapsulation dot1Q 10
+R2(config-subif)# ip address 192.168.10.1 255.255.255.192
+R2(config-subif)# no shutdown
+R2(config-subif)# exit
+
+R2(config)# end
+R2# copy running-config startup-config
+```
+
+## 3. IP Addressing Table
+
+| Interface | IP Address | Subnet Mask | Purpose |
+|---|---|---|---|
+| FastEthernet0/0 | 10.0.0.2 | 255.255.255.252 | Router-to-router link |
+| FastEthernet0/1 | No IP assigned | — | Physical trunk interface |
+| FastEthernet0/1.10 | 192.168.10.1 | 255.255.255.192 | VLAN 10 default gateway |
+
+## 4. VLAN 10 Network Details
+
+| Setting | Value |
+|---|---|
+| VLAN ID | 10 |
+| Network address | 192.168.10.0/26 |
+| Default gateway | 192.168.10.1 |
+| Usable host range | 192.168.10.1–192.168.10.62 |
+| Broadcast address | 192.168.10.63 |
+| Encapsulation | IEEE 802.1Q |
+
+## 5. Verification
+
+Use the following commands to verify the router configuration.
+
+```cisco
+show ip interface brief
+show running-config
+show interfaces FastEthernet0/1.10
+show ip route
+```
+
+### Verification Checklist
+
+- [ ] Verify FastEthernet0/0 has the correct IP address.
+- [ ] Confirm FastEthernet0/1 is enabled.
+- [ ] Confirm FastEthernet0/1.10 uses VLAN 10 encapsulation.
+- [ ] Verify the VLAN 10 gateway address is configured.
+- [ ] Test connectivity between a VLAN 10 client and its default gateway.
+- [ ] Save the running configuration.
+
+## 6. Key Concepts Practiced
+
+- Cisco IOS router configuration
+- IPv4 addressing and subnetting
+- Router-to-router connectivity
+- VLAN subinterfaces
+- IEEE 802.1Q encapsulation
+- Router-on-a-Stick configuration
+- Default gateway setup
+- Configuration verification
+
+## 7. Important Notes
+
+- FastEthernet0/1 must connect to a switch port configured as an 802.1Q trunk that carries VLAN 10.
+- The VLAN must exist on the connected switch, and the client-facing switch ports must be assigned to VLAN 10.
+- FastEthernet0/1 does not need an IP address for this router-on-a-stick configuration because the IP address is assigned to the subinterface.
+- The router-to-router link uses the `10.0.0.0/30` network. The other endpoint should use `10.0.0.1/30`.
+
+## 8. Future Improvements
+
+- Configure additional VLAN subinterfaces.
+- Implement DHCP for VLAN clients.
+- Configure OSPF between routers.
+- Apply ACLs to control traffic between VLANs.
+- Document connectivity tests with command output and screenshots.
